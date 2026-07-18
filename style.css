@@ -247,3 +247,16 @@ button:active {
   text-decoration: none;
   font-weight: bold;
 }
+.profile-banner{
+    width:100%;
+    padding:14px;
+    text-align:center;
+    font-weight:bold;
+    background:#f8d8e8;
+    color:#8a2c63;
+    border-bottom:2px solid #efb8d4;
+    position:sticky;
+    top:0;
+    z-index:999;
+}
+
