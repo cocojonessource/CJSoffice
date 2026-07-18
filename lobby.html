@@ -14,13 +14,17 @@
 </head>
 
 <body class="lobby-page">
+  <div id="profileBanner" class="profile-banner">
+    Source's Office
+  </div>
+
   <main class="lobby">
     <section class="lobby-header">
       <p class="location-label">SOURCE'S OFFICE</p>
 
       <h1>Lobby</h1>
 
-      <p class="welcome-text">
+      <p class="welcome-text" id="welcomeText">
         Good to see you.
       </p>
 
@@ -35,7 +39,9 @@
       <a class="meeting-card" href="rollout.html">
         <div>
           <p class="meeting-number">MEETING 001</p>
+
           <h2>Rollout Review</h2>
+
           <p>
             Campaigns, fan reception, internet conversation,
             and marketing execution.
@@ -48,7 +54,9 @@
       <a class="meeting-card" href="team.html">
         <div>
           <p class="meeting-number">MEETING 002</p>
+
           <h2>Team &amp; Structure</h2>
+
           <p>
             Thoughts on organization, creative roles,
             support, and expansion.
@@ -61,7 +69,9 @@
       <a class="meeting-card" href="brand.html">
         <div>
           <p class="meeting-number">MEETING 003</p>
+
           <h2>Brand Core</h2>
+
           <p>
             The identity behind the music and the world
             surrounding it.
@@ -74,7 +84,9 @@
       <a class="meeting-card" href="ideas.html">
         <div>
           <p class="meeting-number">MEETING 004</p>
+
           <h2>Ideas &amp; Opportunities</h2>
+
           <p>
             Concepts, activations, and possibilities
             worth exploring.
@@ -87,7 +99,9 @@
       <a class="meeting-card" href="wrap-up.html">
         <div>
           <p class="meeting-number">MEETING 005</p>
+
           <h2>Meeting Wrap-Up</h2>
+
           <p>
             Final thoughts, key takeaways, and questions.
           </p>
@@ -97,9 +111,49 @@
       </a>
     </section>
 
-    <a class="return-link" href="index.html">
+    <a class="return-link" id="returnLink" href="index.html">
       ← Return to Reception
     </a>
   </main>
+
+  <script>
+    const profile =
+      localStorage.getItem("sourceOfficeProfile") || "public";
+
+    const profileBanner =
+      document.getElementById("profileBanner");
+
+    const welcomeText =
+      document.getElementById("welcomeText");
+
+    const returnLink =
+      document.getElementById("returnLink");
+
+    if (profile === "coco") {
+      profileBanner.textContent = "Private Office";
+
+      welcomeText.textContent =
+        "Good to see you. Your progress will be saved here.";
+
+      returnLink.href = "coco.html";
+      returnLink.textContent = "← Return to Private Entrance";
+    } else if (profile === "source") {
+      profileBanner.textContent = "Source Admin Office";
+
+      welcomeText.textContent =
+        "Welcome back, Source.";
+
+      returnLink.href = "source.html";
+      returnLink.textContent = "← Return to Source Entrance";
+    } else {
+      profileBanner.textContent = "Source's Office";
+
+      welcomeText.textContent =
+        "Good to see you.";
+
+      returnLink.href = "index.html";
+      returnLink.textContent = "← Return to Reception";
+    }
+  </script>
 </body>
 </html>
