@@ -1,1 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Source's Office</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+  <main class="profile-entry">
+    <section class="profile-entry-card">
+      <p class="office-label">PRIVATE OFFICE ACCESS</p>
+
+      <h1>Welcome Back</h1>
+
+      <p>
+        Your meetings, narration progress, highlights, and notes
+        will be saved under this private office link.
+      </p>
+
+      <button id="enterCocoOffice" type="button">
+        Enter Source's Office
+      </button>
+    </section>
+  </main>
+
+  <script>
+    document
+      .getElementById("enterCocoOffice")
+      .addEventListener("click", function () {
+        localStorage.setItem("sourceOfficeProfile", "coco");
+        window.location.href = "lobby.html";
+      });
+  </script>
+</body>
+</html>
