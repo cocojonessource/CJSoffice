@@ -19,6 +19,55 @@
   </div>
 
   <main class="lobby">
+    <div
+      id="notificationArea"
+      class="notification-area"
+      hidden
+    >
+      <button
+        id="notificationButton"
+        class="notification-button"
+        type="button"
+        aria-label="Open notifications"
+        aria-expanded="false"
+      >
+        🔔
+
+        <span
+          id="notificationCount"
+          class="notification-count"
+        >
+          2
+        </span>
+      </button>
+    </div>
+
+    <section
+      id="notificationPanel"
+      class="notification-panel"
+      aria-hidden="true"
+    >
+      <h2>Office Notifications</h2>
+
+      <ul class="notification-list">
+        <li class="notification-item">
+          <strong>Source replied to your note</strong>
+
+          <p>
+            Rollout Review — tap the meeting to view the reply.
+          </p>
+        </li>
+
+        <li class="notification-item">
+          <strong>New meeting update</strong>
+
+          <p>
+            Ideas &amp; Opportunities has been updated.
+          </p>
+        </li>
+      </ul>
+    </section>
+
     <section class="lobby-header">
       <p class="location-label">SOURCE'S OFFICE</p>
 
@@ -129,6 +178,18 @@
     const returnLink =
       document.getElementById("returnLink");
 
+    const notificationArea =
+      document.getElementById("notificationArea");
+
+    const notificationButton =
+      document.getElementById("notificationButton");
+
+    const notificationPanel =
+      document.getElementById("notificationPanel");
+
+    const notificationCount =
+      document.getElementById("notificationCount");
+
     if (profile === "coco") {
       profileBanner.textContent = "Private Office";
 
@@ -137,6 +198,8 @@
 
       returnLink.href = "coco.html";
       returnLink.textContent = "← Return to Private Entrance";
+
+      notificationArea.hidden = false;
     } else if (profile === "source") {
       profileBanner.textContent = "Source Admin Office";
 
@@ -145,6 +208,8 @@
 
       returnLink.href = "source.html";
       returnLink.textContent = "← Return to Source Entrance";
+
+      notificationArea.hidden = false;
     } else {
       profileBanner.textContent = "Source's Office";
 
@@ -153,7 +218,31 @@
 
       returnLink.href = "index.html";
       returnLink.textContent = "← Return to Reception";
+
+      notificationArea.hidden = true;
     }
+
+    notificationButton.addEventListener(
+      "click",
+      function () {
+        const isOpen =
+          notificationPanel.classList.toggle("open");
+
+        notificationButton.setAttribute(
+          "aria-expanded",
+          String(isOpen)
+        );
+
+        notificationPanel.setAttribute(
+          "aria-hidden",
+          String(!isOpen)
+        );
+
+        if (isOpen) {
+          notificationCount.style.display = "none";
+        }
+      }
+    );
   </script>
 </body>
 </html>
