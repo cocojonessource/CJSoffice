@@ -8,6 +8,6 @@ yesButton.addEventListener("click", function () {
 
 noButton.addEventListener("click", function () {
   responseMessage.textContent =
-    "Too late. Your appointment already started.";
+    "Too late. You're already here.";
   noButton.textContent = "Okay, let me in";
 });
