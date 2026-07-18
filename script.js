@@ -157,6 +157,7 @@ function showToast(message) {
 }
 
 function getMeetingState() {
+  if (!storageAvailable()) return {};
   try {
     return JSON.parse(localStorage.getItem(STORAGE.meeting)) || {};
   } catch {
@@ -165,6 +166,7 @@ function getMeetingState() {
 }
 
 function saveMeetingState(extra = {}) {
+  if (!storageAvailable()) return;
   const oldState = getMeetingState();
   localStorage.setItem(STORAGE.meeting, JSON.stringify({
     ...oldState,
@@ -176,6 +178,7 @@ function saveMeetingState(extra = {}) {
 }
 
 function loadHighlights() {
+  if (!storageAvailable()) { highlights = []; return; }
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE.highlights));
     highlights = Array.isArray(stored) ? stored : [];
@@ -185,6 +188,7 @@ function loadHighlights() {
 }
 
 function saveHighlights() {
+  if (!storageAvailable()) return;
   localStorage.setItem(STORAGE.highlights, JSON.stringify(highlights));
 }
 
@@ -339,6 +343,7 @@ function handleTextSelection() {
   if (selectionSectionName) selectionSectionName.textContent = currentSelection.sectionName;
   selectionNotePreview?.classList.add("is-open");
   selectionNotePreview?.setAttribute("aria-hidden", "false");
+  scheduleSelectionPreviewPosition();
 }
 
 function cancelSelection() {
@@ -426,6 +431,7 @@ function renderAllHighlights() {
 }
 
 function openNoteEditorFor(id, newHighlight = false) {
+  rememberFocus();
   const highlight = getHighlight(id);
   if (!highlight) return;
   activeHighlightId = id;
@@ -437,6 +443,7 @@ function openNoteEditorFor(id, newHighlight = false) {
   noteEditorOverlay?.classList.add("is-open");
   noteEditorOverlay?.setAttribute("aria-hidden", "false");
   setBodyLock();
+  syncNoteLimitUI();
   setTimeout(() => noteEditorText?.focus(), 80);
 }
 
@@ -445,17 +452,19 @@ function closeNoteEditorModal() {
   noteEditorOverlay?.classList.remove("is-open");
   noteEditorOverlay?.setAttribute("aria-hidden", "true");
   setBodyLock();
+  restoreFocus();
 }
 
 function saveActiveNote() {
   const highlight = getHighlight(activeHighlightId);
   if (!highlight) return;
-  highlight.note = noteEditorText?.value.trim() || "";
+  highlight.note = (noteEditorText?.value.trim() || "").slice(0, MAX_NOTE_LENGTH);
   highlight.updatedAt = Date.now();
   saveHighlights();
   renderAllHighlights();
   closeNoteEditorModal();
   showToast(highlight.note ? "Note saved." : "Highlight saved.");
+  announce(highlight.note ? "Note saved." : "Highlight saved.");
 }
 
 function openDeleteOptions() {
@@ -771,9 +780,7 @@ confirmHighlightButton?.addEventListener("click", confirmHighlight);
 
 closeNoteEditor?.addEventListener("click", closeNoteEditorModal);
 saveNoteButton?.addEventListener("click", saveActiveNote);
-noteEditorText?.addEventListener("input", () => {
-  if (noteCharacterCount) noteCharacterCount.textContent = String(noteEditorText.value.length);
-});
+noteEditorText?.addEventListener("input", syncNoteLimitUI);
 noteEditorOverlay?.addEventListener("click", event => {
   if (event.target === noteEditorOverlay) closeNoteEditorModal();
 });
@@ -873,8 +880,306 @@ document.addEventListener("keydown", event => {
   if (!typing && event.key === "ArrowRight" && currentPage < TOTAL_PAGES) showPage(currentPage + 1);
 });
 
+
+/* =========================================================
+   RELIABILITY + ACCESSIBILITY ENHANCEMENTS
+   These helpers make the meeting resilient across refreshes,
+   mobile selection, resized layouts, and malformed saved data.
+   ========================================================= */
+
+const MAX_NOTE_LENGTH = 1200;
+let lastFocusedElement = null;
+let selectionPreviewRaf = null;
+
+function storageAvailable() {
+  try {
+    const key = "__sourceOfficeStorageTest__";
+    localStorage.setItem(key, key);
+    localStorage.removeItem(key);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function normalizeHighlightRecord(item) {
+  if (!item || typeof item !== "object") return null;
+  const page = clamp(Number(item.page) || 1, 1, TOTAL_PAGES);
+  const start = Math.max(0, Number(item.start) || 0);
+  const end = Math.max(start, Number(item.end) || start);
+  const text = String(item.text || "").trim();
+  if (!item.id || !text || end <= start) return null;
+  return {
+    id: String(item.id),
+    page,
+    text,
+    start,
+    end,
+    sectionName: String(item.sectionName || PAGE_TITLES[page - 1]),
+    note: String(item.note || "").slice(0, MAX_NOTE_LENGTH),
+    createdAt: Number(item.createdAt) || Date.now(),
+    updatedAt: Number(item.updatedAt) || Number(item.createdAt) || Date.now()
+  };
+}
+
+function sanitizeStoredHighlights() {
+  const clean = highlights.map(normalizeHighlightRecord).filter(Boolean);
+  const seen = new Set();
+  highlights = clean.filter(item => {
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+  saveHighlights();
+}
+
+function getFocusableElements(container) {
+  if (!container) return [];
+  return [...container.querySelectorAll(
+    'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )].filter(element => !element.hidden && element.offsetParent !== null);
+}
+
+function rememberFocus() {
+  lastFocusedElement = document.activeElement instanceof HTMLElement
+    ? document.activeElement
+    : null;
+}
+
+function restoreFocus() {
+  if (lastFocusedElement?.isConnected) lastFocusedElement.focus();
+  lastFocusedElement = null;
+}
+
+function trapModalFocus(event, container) {
+  if (event.key !== "Tab") return;
+  const focusable = getFocusableElements(container);
+  if (!focusable.length) {
+    event.preventDefault();
+    return;
+  }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function positionSelectionPreview() {
+  if (!selectionNotePreview?.classList.contains("is-open")) return;
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
+  const rect = selection.getRangeAt(0).getBoundingClientRect();
+  if (!rect.width && !rect.height) return;
+
+  selectionNotePreview.style.position = "fixed";
+  selectionNotePreview.style.zIndex = "1000";
+  selectionNotePreview.style.visibility = "hidden";
+
+  const previewRect = selectionNotePreview.getBoundingClientRect();
+  const gap = 12;
+  const margin = 12;
+  let left = rect.left + rect.width / 2 - previewRect.width / 2;
+  left = clamp(left, margin, window.innerWidth - previewRect.width - margin);
+  let top = rect.bottom + gap;
+  if (top + previewRect.height > window.innerHeight - margin) {
+    top = rect.top - previewRect.height - gap;
+  }
+  top = clamp(top, margin, window.innerHeight - previewRect.height - margin);
+
+  selectionNotePreview.style.left = `${Math.round(left)}px`;
+  selectionNotePreview.style.top = `${Math.round(top)}px`;
+  selectionNotePreview.style.visibility = "visible";
+}
+
+function scheduleSelectionPreviewPosition() {
+  cancelAnimationFrame(selectionPreviewRaf);
+  selectionPreviewRaf = requestAnimationFrame(positionSelectionPreview);
+}
+
+function closeAllTransientUI() {
+  cancelSelection();
+  closeDeleteOptions();
+  if (noteEditorOverlay?.classList.contains("is-open")) closeNoteEditorModal();
+  if (meetingNotesDrawer?.classList.contains("is-open")) closeNotesDrawerPanel();
+  if (officeGuideOverlay?.classList.contains("is-open")) closeGuideModal();
+}
+
+function validateHighlightAgainstPage(highlight) {
+  const root = getReadableRoot(highlight.page);
+  if (!root) return false;
+  const fullText = root.textContent || "";
+  if (highlight.end > fullText.length) return false;
+  const storedSlice = fullText.slice(highlight.start, highlight.end).replace(/\s+/g, " ").trim();
+  return storedSlice === highlight.text.replace(/\s+/g, " ").trim();
+}
+
+function repairHighlightOffsets(highlight) {
+  const root = getReadableRoot(highlight.page);
+  if (!root) return false;
+  const fullText = root.textContent || "";
+  const exact = fullText.indexOf(highlight.text);
+  if (exact >= 0) {
+    highlight.start = exact;
+    highlight.end = exact + highlight.text.length;
+    highlight.updatedAt = Date.now();
+    return true;
+  }
+
+  const normalizedNeedle = highlight.text.replace(/\s+/g, " ").trim();
+  const normalizedText = fullText.replace(/\s+/g, " ");
+  const normalizedIndex = normalizedText.indexOf(normalizedNeedle);
+  if (normalizedIndex < 0) return false;
+
+  let rawIndex = 0;
+  let normalizedCursor = 0;
+  while (rawIndex < fullText.length && normalizedCursor < normalizedIndex) {
+    if (/\s/.test(fullText[rawIndex])) {
+      while (rawIndex < fullText.length && /\s/.test(fullText[rawIndex])) rawIndex += 1;
+      normalizedCursor += 1;
+    } else {
+      rawIndex += 1;
+      normalizedCursor += 1;
+    }
+  }
+  highlight.start = rawIndex;
+  highlight.end = rawIndex + highlight.text.length;
+  highlight.updatedAt = Date.now();
+  return true;
+}
+
+function repairStoredHighlights() {
+  let changed = false;
+  highlights.forEach(item => {
+    if (!validateHighlightAgainstPage(item) && repairHighlightOffsets(item)) changed = true;
+  });
+  if (changed) saveHighlights();
+}
+
+function announce(message) {
+  let region = document.getElementById("sourceOfficeLiveRegion");
+  if (!region) {
+    region = document.createElement("div");
+    region.id = "sourceOfficeLiveRegion";
+    region.className = "sr-only";
+    region.setAttribute("aria-live", "polite");
+    region.setAttribute("aria-atomic", "true");
+    document.body.appendChild(region);
+  }
+  region.textContent = "";
+  requestAnimationFrame(() => { region.textContent = message; });
+}
+
+function enhanceDialogSemantics() {
+  [officeGuideOverlay, noteEditorOverlay, deleteOptionsOverlay].forEach(overlay => {
+    if (!overlay) return;
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+  });
+  meetingNotesDrawer?.setAttribute("role", "dialog");
+  meetingNotesDrawer?.setAttribute("aria-modal", "true");
+}
+
+function syncNoteLimitUI() {
+  if (!noteEditorText) return;
+  noteEditorText.maxLength = MAX_NOTE_LENGTH;
+  const length = noteEditorText.value.length;
+  if (noteCharacterCount) noteCharacterCount.textContent = `${length} / ${MAX_NOTE_LENGTH}`;
+}
+
+function installDelegatedHighlightActions() {
+  document.addEventListener("click", event => {
+    const edit = event.target.closest("[data-edit-highlight], [data-edit-drawer]");
+    const remove = event.target.closest("[data-delete-highlight], [data-delete-drawer]");
+    if (edit) {
+      const id = edit.dataset.editHighlight || edit.dataset.editDrawer;
+      if (id) openNoteEditorFor(id);
+    }
+    if (remove) {
+      const id = remove.dataset.deleteHighlight || remove.dataset.deleteDrawer;
+      if (!id) return;
+      activeHighlightId = id;
+      openNoteEditorFor(id);
+      openDeleteOptions();
+    }
+  });
+}
+
+function installAccessibilityHandlers() {
+  document.addEventListener("keydown", event => {
+    if (noteEditorOverlay?.classList.contains("is-open")) trapModalFocus(event, noteEditorOverlay);
+    else if (deleteOptionsOverlay?.classList.contains("is-open")) trapModalFocus(event, deleteOptionsOverlay);
+    else if (officeGuideOverlay?.classList.contains("is-open")) trapModalFocus(event, officeGuideOverlay);
+    else if (meetingNotesDrawer?.classList.contains("is-open")) trapModalFocus(event, meetingNotesDrawer);
+  });
+}
+
+function installSelectionPositionHandlers() {
+  window.addEventListener("resize", scheduleSelectionPreviewPosition);
+  window.addEventListener("scroll", () => {
+    if (selectionNotePreview?.classList.contains("is-open")) scheduleSelectionPreviewPosition();
+  }, { passive: true });
+  document.addEventListener("selectionchange", () => {
+    if (selectionNotePreview?.classList.contains("is-open")) scheduleSelectionPreviewPosition();
+  });
+}
+
+function installOnlineStatusHandlers() {
+  window.addEventListener("offline", () => showToast("You are offline. Saved notes still work on this device."));
+  window.addEventListener("online", () => showToast("You are back online."));
+}
+
+function installPrintHandlers() {
+  window.addEventListener("beforeprint", () => {
+    pages.forEach(page => { page.hidden = false; });
+  });
+  window.addEventListener("afterprint", () => {
+    pages.forEach(page => {
+      const active = Number(page.dataset.pageNumber) === currentPage;
+      page.hidden = !active;
+    });
+  });
+}
+
+function installStateSync() {
+  window.addEventListener("storage", event => {
+    if (event.key === STORAGE.highlights) {
+      loadHighlights();
+      sanitizeStoredHighlights();
+      repairStoredHighlights();
+      renderAllHighlights();
+      announce("Highlights updated in another tab.");
+    }
+    if (event.key === STORAGE.meeting) updateContinueButton();
+  });
+}
+
+function installErrorBoundary() {
+  window.addEventListener("error", event => {
+    console.error("Source's Office error:", event.error || event.message);
+  });
+  window.addEventListener("unhandledrejection", event => {
+    console.error("Source's Office promise error:", event.reason);
+  });
+}
+
 function initialize() {
+  enhanceDialogSemantics();
+  installDelegatedHighlightActions();
+  installAccessibilityHandlers();
+  installSelectionPositionHandlers();
+  installOnlineStatusHandlers();
+  installPrintHandlers();
+  installStateSync();
+  installErrorBoundary();
+
   loadHighlights();
+  sanitizeStoredHighlights();
+  repairStoredHighlights();
   buildPaginationDots();
   const state = getMeetingState();
   currentPage = clamp(Number(state.page) || 1, 1, TOTAL_PAGES);
@@ -899,4 +1204,3 @@ function initialize() {
 }
 
 initialize();
-
