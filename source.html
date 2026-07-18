@@ -1,1 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Source's Office</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+  <main class="profile-entry">
+    <section class="profile-entry-card">
+      <p class="office-label">SOURCE ADMIN</p>
+
+      <h1>Welcome Back, Source</h1>
+
+      <p>
+        This is your private workspace where you can review meetings,
+        test features, and manage the office without affecting anyone else's progress.
+      </p>
+
+      <button id="enterSourceOffice" type="button">
+        Enter Source's Office
+      </button>
+    </section>
+  </main>
+
+  <script>
+    document
+      .getElementById("enterSourceOffice")
+      .addEventListener("click", function () {
+        localStorage.setItem("sourceOfficeProfile", "source");
+        window.location.href = "lobby.html";
+      });
+  </script>
+</body>
+</html>
