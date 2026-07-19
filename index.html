@@ -1,16 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
   <title>Source's Office</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #5f3d59;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(
+          circle at 20% 15%,
+          rgba(255, 255, 255, 0.95) 0 4px,
+          transparent 5px
+        ),
+        radial-gradient(
+          circle at 80% 25%,
+          rgba(255, 255, 255, 0.85) 0 3px,
+          transparent 4px
+        ),
+        linear-gradient(
+          180deg,
+          #ffd9ea 0%,
+          #f8cce3 45%,
+          #edb9d8 100%
+        );
+      background-size:
+        120px 120px,
+        150px 150px,
+        auto;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .reception {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 100px 22px 40px;
+      overflow: hidden;
+    }
+
+    .reception::before,
+    .reception::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .reception::before {
+      width: 330px;
+      height: 330px;
+      top: -120px;
+      left: -90px;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .reception::after {
+      width: 280px;
+      height: 280px;
+      right: -100px;
+      bottom: -100px;
+      background: rgba(208, 153, 207, 0.22);
+    }
+
+    .office-sign {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      z-index: 2;
+      transform: translateX(-50%) rotate(-1deg);
+      width: max-content;
+      max-width: calc(100% - 32px);
+      padding: 13px 26px;
+      border: 3px solid #8d5d83;
+      border-radius: 12px;
+      color: #704b6a;
+      background: #fff3f9;
+      box-shadow:
+        0 7px 0 #c78eb3,
+        0 13px 26px rgba(99, 53, 91, 0.18);
+      font-weight: 900;
+      font-size: 0.84rem;
+      letter-spacing: 0.18em;
+      text-align: center;
+    }
+
+    .desk {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 100%);
+      padding: 32px 32px 25px;
+      border: 4px solid #8c5d7d;
+      border-radius: 30px 30px 20px 20px;
+      background:
+        linear-gradient(
+          180deg,
+          #d995b9 0%,
+          #c77ca7 100%
+        );
+      box-shadow:
+        0 18px 0 #95617e,
+        0 28px 50px rgba(93, 47, 81, 0.25);
+    }
+
+    .computer-screen {
+      position: relative;
+      min-height: 370px;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      padding: 50px 32px;
+      border: 14px solid #6f4a68;
+      border-radius: 30px;
+      background:
+        linear-gradient(
+          rgba(255, 255, 255, 0.78),
+          rgba(255, 255, 255, 0.78)
+        ),
+        repeating-linear-gradient(
+          0deg,
+          #fff8fc 0,
+          #fff8fc 25px,
+          #f8e6f0 26px
+        );
+      box-shadow:
+        inset 0 0 0 4px #b787a7,
+        0 10px 20px rgba(80, 40, 70, 0.18);
+      text-align: center;
+    }
+
+    .computer-screen::after {
+      content: "";
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      width: 110px;
+      height: 22px;
+      transform: translateX(-50%);
+      border-radius: 0 0 14px 14px;
+      background: #6f4a68;
+    }
+
+    .small-text {
+      margin: 0;
+      color: #a06c91;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .computer-screen h1 {
+      margin: 15px 0 17px;
+      color: #7a4e71;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.7rem, 8vw, 5rem);
+      line-height: 0.98;
+      text-shadow: 2px 3px 0 #efd1e2;
+    }
+
+    .question {
+      margin: 0 0 27px;
+      color: #76546f;
+      font-size: 1.08rem;
+      line-height: 1.5;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .buttons button {
+      min-width: 120px;
+      padding: 13px 23px;
+      border: 2px solid #8f6083;
+      border-radius: 999px;
+      color: #6c4564;
+      background: #fff4fa;
+      box-shadow: 0 5px 0 #c487ac;
+      font-weight: 900;
+      cursor: pointer;
+      transition:
+        transform 150ms ease,
+        box-shadow 150ms ease,
+        background 150ms ease;
+    }
+
+    .buttons button:first-child {
+      color: white;
+      background: #b76e9c;
+    }
+
+    .buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #c487ac;
+    }
+
+    .buttons button:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #c487ac;
+    }
+
+    #responseMessage {
+      min-height: 24px;
+      margin: 22px 0 0;
+      color: #8b547a;
+      font-weight: 800;
+    }
+
+    .desk-items {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      margin-top: 34px;
+      padding: 0 14px;
+    }
+
+    .coffee,
+    .plant {
+      filter: drop-shadow(0 5px 3px rgba(77, 38, 66, 0.2));
+      font-size: 2.8rem;
+    }
+
+    .folder {
+      position: relative;
+      min-width: 180px;
+      padding: 20px 24px 16px;
+      border: 3px solid #9b6b78;
+      border-radius: 9px;
+      color: #714951;
+      background: #f6c7d6;
+      box-shadow: 0 7px 0 #a7657c;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-align: center;
+    }
+
+    .folder::before {
+      content: "";
+      position: absolute;
+      top: -13px;
+      left: 15px;
+      width: 70px;
+      height: 14px;
+      border: 3px solid #9b6b78;
+      border-bottom: 0;
+      border-radius: 8px 8px 0 0;
+      background: #f6c7d6;
+    }
+
+    @media (max-width: 600px) {
+      .reception {
+        padding: 92px 13px 35px;
+      }
+
+      .office-sign {
+        top: 22px;
+        padding: 11px 18px;
+        font-size: 0.72rem;
+      }
+
+      .desk {
+        padding: 17px 17px 22px;
+        border-radius: 24px;
+      }
+
+      .computer-screen {
+        min-height: 390px;
+        padding: 42px 20px;
+        border-width: 9px;
+      }
+
+      .computer-screen h1 {
+        font-size: clamp(2.5rem, 14vw, 4rem);
+      }
+
+      .buttons {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .buttons button {
+        width: 100%;
+      }
+
+      .desk-items {
+        padding: 0;
+      }
+
+      .coffee,
+      .plant {
+        font-size: 2rem;
+      }
+
+      .folder {
+        min-width: 120px;
+        padding: 16px 13px 13px;
+        font-size: 0.7rem;
+      }
+    }
+  </style>
 </head>
 
 <body data-profile="public">
@@ -45,13 +362,13 @@
       </div>
 
       <div class="desk-items">
-        <div class="coffee">☕</div>
+        <div class="coffee" aria-hidden="true">☕</div>
 
         <div class="folder">
           IDEAS
         </div>
 
-        <div class="plant">🌷</div>
+        <div class="plant" aria-hidden="true">🌷</div>
       </div>
     </div>
   </main>
@@ -61,8 +378,29 @@
       "sourceOfficeProfile",
       "public"
     );
-  </script>
 
-  <script src="script.js"></script>
+    const yesButton =
+      document.getElementById("yesButton");
+
+    const noButton =
+      document.getElementById("noButton");
+
+    const responseMessage =
+      document.getElementById("responseMessage");
+
+    yesButton.addEventListener("click", function () {
+      responseMessage.textContent =
+        "Come on in. The lobby is ready.";
+
+      setTimeout(function () {
+        window.location.href = "lobby.html";
+      }, 450);
+    });
+
+    noButton.addEventListener("click", function () {
+      responseMessage.textContent =
+        "Okay. The office will be here when you’re ready.";
+    });
+  </script>
 </body>
 </html>
