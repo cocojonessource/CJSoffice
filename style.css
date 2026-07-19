@@ -1950,3 +1950,172 @@ a {
     width: 100vw;
   }
 }
+Your `style.css` only contains the Meeting 001 styles. It has **nothing for the homepage classes**, so the homepage appears unstyled. 
+
+Paste this at the **very bottom of `style.css`**:
+
+```css
+/* =========================================================
+   RECEPTION — HOMEPAGE
+   ========================================================= */
+
+.reception {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top left, #f4e8ff 0, transparent 35%),
+    radial-gradient(circle at bottom right, #f8dfea 0, transparent 35%),
+    #fffafc;
+}
+
+.office-sign {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 253, 251, 0.94);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-card);
+}
+
+.desk {
+  width: min(760px, 100%);
+  padding: 34px;
+  border: 1px solid var(--line-strong);
+  border-radius: 28px;
+  background: #dcb88f;
+  box-shadow: 0 24px 60px rgba(69, 48, 85, 0.18);
+}
+
+.computer-screen {
+  padding: 54px 32px;
+  border: 12px solid #3b3442;
+  border-radius: 22px;
+  background: var(--paper);
+  text-align: center;
+  box-shadow: inset 0 0 0 2px #1f1a24;
+}
+
+.computer-screen .small-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.computer-screen h1 {
+  margin: 12px 0 18px;
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 7vw, 4.8rem);
+  line-height: 1;
+}
+
+.computer-screen .question {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.buttons button {
+  min-width: 110px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: var(--paper);
+  font-weight: 850;
+  cursor: pointer;
+  transition: 180ms ease;
+}
+
+.buttons button:first-child {
+  border-color: var(--lavender-deep);
+  background: var(--lavender-deep);
+  color: white;
+}
+
+.buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+#responseMessage {
+  min-height: 24px;
+  margin: 20px 0 0;
+  color: var(--purple-note-dark);
+  font-weight: 750;
+}
+
+.desk-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.coffee,
+.plant {
+  font-size: 2.4rem;
+}
+
+.folder {
+  min-width: 150px;
+  padding: 18px 22px;
+  border-radius: 10px 10px 4px 4px;
+  background: #efca87;
+  color: #5b4526;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .reception {
+    padding: 80px 14px 24px;
+  }
+
+  .desk {
+    padding: 18px;
+  }
+
+  .computer-screen {
+    padding: 38px 18px;
+    border-width: 8px;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .buttons button {
+    width: 100%;
+  }
+
+  .desk-items {
+    align-items: center;
+  }
+
+  .folder {
+    min-width: 110px;
+    padding: 14px;
+  }
+}
+```
+
+Do not change your `index.html`. The stylesheet link is already correct.
