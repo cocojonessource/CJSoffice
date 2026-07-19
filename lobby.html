@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
   <title>Source's Office — Lobby</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="lobby-page">
@@ -62,14 +62,16 @@
           <strong>New meeting update</strong>
 
           <p>
-            Ideas &amp; Opportunities has been updated.
+            Ideas &amp; Suggestions has been updated.
           </p>
         </li>
       </ul>
     </section>
 
     <section class="lobby-header">
-      <p class="location-label">SOURCE'S OFFICE</p>
+      <p class="location-label">
+        SOURCE'S OFFICE
+      </p>
 
       <h1>Lobby</h1>
 
@@ -83,17 +85,20 @@
     </section>
 
     <section class="schedule">
-      <p class="schedule-label">TODAY'S AGENDA</p>
+      <p class="schedule-label">
+        TODAY'S AGENDA
+      </p>
 
       <a class="meeting-card" href="rollout.html">
         <div>
-          <p class="meeting-number">MEETING 001</p>
+          <p class="meeting-number">
+            MEETING 001
+          </p>
 
           <h2>Rollout Review</h2>
 
           <p>
-            Campaigns, fan reception, internet conversation,
-            and marketing execution.
+            How did the Body So Tea rollout actually feel to experience?
           </p>
         </div>
 
@@ -102,13 +107,15 @@
 
       <a class="meeting-card" href="team.html">
         <div>
-          <p class="meeting-number">MEETING 002</p>
+          <p class="meeting-number">
+            MEETING 002
+          </p>
 
           <h2>Team &amp; Structure</h2>
 
           <p>
-            Thoughts on organization, creative roles,
-            support, and expansion.
+            Why expanding the team matters and where the current structure
+            may be limiting the full vision.
           </p>
         </div>
 
@@ -117,13 +124,15 @@
 
       <a class="meeting-card" href="brand.html">
         <div>
-          <p class="meeting-number">MEETING 003</p>
+          <p class="meeting-number">
+            MEETING 003
+          </p>
 
-          <h2>Brand Core</h2>
+          <h2>Sound &amp; Core</h2>
 
           <p>
-            The identity behind the music and the world
-            surrounding it.
+            How you can experiment, grow, and explore different sounds
+            without losing the core that makes the music feel like you.
           </p>
         </div>
 
@@ -132,27 +141,16 @@
 
       <a class="meeting-card" href="ideas.html">
         <div>
-          <p class="meeting-number">MEETING 004</p>
-
-          <h2>Ideas &amp; Opportunities</h2>
-
-          <p>
-            Concepts, activations, and possibilities
-            worth exploring.
+          <p class="meeting-number">
+            MEETING 004
           </p>
-        </div>
 
-        <span>Open File →</span>
-      </a>
-
-      <a class="meeting-card" href="wrap-up.html">
-        <div>
-          <p class="meeting-number">MEETING 005</p>
-
-          <h2>Meeting Wrap-Up</h2>
+          <h2>Ideas &amp; Suggestions</h2>
 
           <p>
-            Final thoughts, key takeaways, and questions.
+            Rollout concepts, fan experiences, interactive ideas,
+            branding opportunities, and ways to build a fuller world
+            around the music.
           </p>
         </div>
 
@@ -160,7 +158,11 @@
       </a>
     </section>
 
-    <a class="return-link" id="returnLink" href="index.html">
+    <a
+      class="return-link"
+      id="returnLink"
+      href="index.html"
+    >
       ← Return to Reception
     </a>
   </main>
@@ -191,35 +193,50 @@
       document.getElementById("notificationCount");
 
     if (profile === "coco") {
-      profileBanner.textContent = "Private Office";
+      profileBanner.textContent =
+        "Private Office";
 
       welcomeText.textContent =
         "Good to see you. Your progress will be saved here.";
 
-      returnLink.href = "coco.html";
-      returnLink.textContent = "← Return to Private Entrance";
+      returnLink.href =
+        "coco.html";
 
-      notificationArea.hidden = false;
+      returnLink.textContent =
+        "← Return to Private Entrance";
+
+      notificationArea.hidden =
+        false;
     } else if (profile === "source") {
-      profileBanner.textContent = "Source Admin Office";
+      profileBanner.textContent =
+        "Source Admin Office";
 
       welcomeText.textContent =
         "Welcome back, Source.";
 
-      returnLink.href = "source.html";
-      returnLink.textContent = "← Return to Source Entrance";
+      returnLink.href =
+        "source.html";
 
-      notificationArea.hidden = false;
+      returnLink.textContent =
+        "← Return to Source Entrance";
+
+      notificationArea.hidden =
+        false;
     } else {
-      profileBanner.textContent = "Source's Office";
+      profileBanner.textContent =
+        "Source's Office";
 
       welcomeText.textContent =
         "Good to see you.";
 
-      returnLink.href = "index.html";
-      returnLink.textContent = "← Return to Reception";
+      returnLink.href =
+        "index.html";
 
-      notificationArea.hidden = true;
+      returnLink.textContent =
+        "← Return to Reception";
+
+      notificationArea.hidden =
+        true;
     }
 
     notificationButton.addEventListener(
@@ -239,7 +256,7 @@
         );
 
         if (isOpen) {
-          notificationCount.style.display = "none";
+          notificationCount.hidden = true;
         }
       }
     );
