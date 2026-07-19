@@ -9,8 +9,158 @@
   <title>Meeting 001 | Rollout Review</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .meeting-photo-break img { display:block; width:100%; height:auto; border-radius:18px; box-shadow:var(--shadow-card); }
-    .wrong-conversation-image { overflow:hidden; border-radius:20px; }
+    .meeting-reading-column {
+      max-width: 860px;
+    }
+
+    .meeting-copy-block p,
+    .meeting-copy-block li,
+    .meeting-visual-caption,
+    .meeting-image-caption {
+      font-size: 1.06rem;
+      line-height: 1.82;
+      font-weight: 400;
+    }
+
+    .meeting-copy-block h2 {
+      font-size: clamp(1.55rem, 2vw, 2.05rem);
+      line-height: 1.24;
+      font-weight: 700;
+    }
+
+    .meeting-copy-block em {
+      font-style: italic;
+    }
+
+    .meeting-copy-block strong {
+      font-weight: 700;
+    }
+
+    .meeting-photo-break,
+    .presentation-visual {
+      margin: 34px 0;
+    }
+
+    .meeting-photo-break img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .meeting-image-caption,
+    .meeting-photo-break figcaption {
+      margin-top: 11px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .presentation-visual {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(135deg, #fbf6ff, #fffafc);
+      box-shadow: var(--shadow-card);
+    }
+
+    .presentation-visual svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .visual-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      padding: 22px;
+    }
+
+    .visual-card {
+      min-height: 150px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.88);
+      text-align: center;
+    }
+
+    .visual-card span {
+      color: var(--purple-note-dark);
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .visual-card strong {
+      font-family: var(--serif);
+      font-size: 1.28rem;
+      line-height: 1.25;
+    }
+
+    .visual-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .visual-arrow-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 24px;
+    }
+
+    .visual-arrow {
+      color: var(--lavender-deep);
+      font-size: 1.8rem;
+      font-weight: 900;
+    }
+
+    .wrong-conversation-image {
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .evidence-link {
+      margin-top: 34px;
+    }
+
+    .evidence-link small {
+      line-height: 1.45;
+    }
+
+    .fan-image-slot {
+      margin-top: 30px;
+    }
+
+    .fan-image-slot img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    @media (max-width: 720px) {
+      .visual-grid,
+      .visual-arrow-row {
+        grid-template-columns: 1fr;
+      }
+
+      .visual-arrow {
+        transform: rotate(90deg);
+        justify-self: center;
+      }
+    }
   </style>
 </head>
 
@@ -443,7 +593,7 @@
           </h1>
 
           <p>
-            This is about the world around it..
+            This is about the world around it...
           </p>
 
         </section>
@@ -467,6 +617,7 @@
 
               <h2>
                 Before I start, just FYI, this all comes from love!
+              </h2>
 
               <p>
                 If I like something, it makes me want to understand it more.
@@ -475,11 +626,33 @@
 
               <p>
                 And I’m not trying to be your biggest music critic and tell
-                you if I like a song or not, so that determines if it is good or bad...but I do like
-                <em>Body So Tea</em>.
+                you if I like a song or not, so that determines if it is good
+                or bad... but I do like <em>Body So Tea</em>.
               </p>
 
             </section>
+
+            <div class="presentation-visual" aria-label="Growth, longevity, and cohesion visual">
+              <div class="visual-grid">
+                <article class="visual-card">
+                  <span>01</span>
+                  <strong>Growth</strong>
+                  <p>How one moment builds into the next.</p>
+                </article>
+
+                <article class="visual-card">
+                  <span>02</span>
+                  <strong>Longevity</strong>
+                  <p>What still matters after the release week ends.</p>
+                </article>
+
+                <article class="visual-card">
+                  <span>03</span>
+                  <strong>Cohesion</strong>
+                  <p>How the music, visuals, and story connect.</p>
+                </article>
+              </div>
+            </div>
 
             <aside class="meeting-pull-quote">
 
@@ -488,7 +661,7 @@
               <p>
                 I would never tell you what type of music to make, but I will
                 always look at how what you make connects and builds.
-                That is why I dislike the majority of the internet takes rn! 
+                That is why I dislike the majority of the internet takes rn!
               </p>
 
             </aside>
@@ -547,20 +720,20 @@
                 vulnerable and opening up to us and because you asked a question
                 obvi there was discourse.
                 The direction and sound you should lean into has always been a hot topic
-                even before the video..and this just threw gasoline on the fire..
+                even before the video... and this just threw gasoline on the fire...
 
               </p>
 
               <p>
                 So when you put that question out there, the entire internet 
-                answered with their opinions (there were so many bad takes..omg!!)  
-                anyway, the video set an expectation that yes this is a journey, and 
+                answered with their opinions (there were so many bad takes... omg!!)  
+                anyway, the video set an expectation that yes, this is a journey, and 
                 that by the end of this… there would be an answer.
               </p>
 
               <p>
                 I mean yeah, the video was framed as we are on this journey with you 
-                like the co-captains are back on the boat with you finally!!...but 
+                like the co-captains are back on the boat with you finally!!... but 
 
               </p>
 
@@ -593,6 +766,32 @@
               </p>
 
             </section>
+
+            <div class="presentation-visual" aria-label="How the rollout changed visual">
+              <div class="visual-arrow-row">
+                <article class="visual-card">
+                  <span>Video One</span>
+                  <strong>A real question</strong>
+                  <p>It felt vulnerable and open.</p>
+                </article>
+
+                <div class="visual-arrow" aria-hidden="true">→</div>
+
+                <article class="visual-card">
+                  <span>The Internet</span>
+                  <strong>Everyone answered</strong>
+                  <p>Fans and artists treated it like a conversation.</p>
+                </article>
+
+                <div class="visual-arrow" aria-hidden="true">→</div>
+
+                <article class="visual-card">
+                  <span>Video Two</span>
+                  <strong>It felt staged</strong>
+                  <p>The conversation started feeling like a rollout.</p>
+                </article>
+              </div>
+            </div>
 
           </div>
 
@@ -648,16 +847,16 @@
               </h2>
 
               <p>
-               I literally watched the disconnect happen in real time. 
+               I literally watched the disconnect happen in real time,
                and it came from how everything was being presented to us.
               </p>
 
               <p>
                 Because the way everything is framed, everything feels
                 like a decision. So the audience has it in their minds that
-                oh, this is the direction she’s taking, because of the question
+                oh, this is the direction she’s taking because of the question
                 you asked in video one. So instead of them following your journey, 
-                it feels like stop her before she stops making the music we like! 
+                it feels like “stop her before she stops making the music we like!”
               </p>
 
               <p>
@@ -666,10 +865,32 @@
               </p>
 
               <p>
-                And that’s where the disconnect really is... well one of them.
+                And that’s where the disconnect really is... well, one of them.
               </p>
 
             </section>
+
+            <div class="presentation-visual" aria-label="Journey versus decision visual">
+              <div class="visual-grid">
+                <article class="visual-card">
+                  <span>What You Meant</span>
+                  <strong>A journey</strong>
+                  <p>Different sounds and different parts of you unfolding.</p>
+                </article>
+
+                <article class="visual-card">
+                  <span>What People Heard</span>
+                  <strong>A decision</strong>
+                  <p>This is the direction she is choosing now.</p>
+                </article>
+
+                <article class="visual-card">
+                  <span>The Result</span>
+                  <strong>Pushback</strong>
+                  <p>People tried to stop the change before hearing the song.</p>
+                </article>
+              </div>
+            </div>
 
           </div>
 
@@ -722,13 +943,15 @@
 
               <p>
                 This is when I really noticed that the rollout was a mess. Well, I 
-                been knew it was since video one but anyywayy..
+                been knew it was since video one, but anyywayy...
               </p>
 
               <p>
                 Not just to casual listeners, but your fanbase became passive.
+              </p>
+
               <p>
-                instead of it being “yay, Coco posted,”<br>
+                Instead of it being “yay, Coco posted,”<br>
                 it became:
               </p>
 
@@ -741,6 +964,9 @@
               <p>
                 To the point where in the last video, there was a snippet
                 people completely missed.
+              </p>
+
+              <p>
                 And that’s why I said something about it on Twitter.
                 bc like… dang, y’all aren’t even watching these all
                 the way through anymore.
@@ -779,10 +1005,35 @@
                 that is literally how the fans were feeling.
               </p>
 
-              <p>
             </section>
 
-            <figure class="meeting-photo-break">
+            <div class="presentation-visual" aria-label="Fan fatigue notification visual">
+              <div class="visual-arrow-row">
+                <article class="visual-card">
+                  <span>Notification</span>
+                  <strong>Coco posted</strong>
+                  <p>The first reaction should have been excitement.</p>
+                </article>
+
+                <div class="visual-arrow" aria-hidden="true">→</div>
+
+                <article class="visual-card">
+                  <span>Actual Reaction</span>
+                  <strong>It’s one of those videos</strong>
+                  <p>The fanbase became passive before the series ended.</p>
+                </article>
+
+                <div class="visual-arrow" aria-hidden="true">→</div>
+
+                <article class="visual-card">
+                  <span>Last Video</span>
+                  <strong>The snippet got missed</strong>
+                  <p>People were no longer watching all the way through.</p>
+                </article>
+              </div>
+            </div>
+
+            <figure class="meeting-photo-break fan-image-slot">
               <img
                 src="ff.jpg"
                 alt="Fan reaction connected to the rollout fatigue discussion"
@@ -847,7 +1098,7 @@
 
               <p>
                 The rollout was asking people to think about your identity,
-                your musical direction, and your future as an artist..
+                your musical direction, and your future as an artist...
               </p>
 
               <p>
@@ -863,6 +1114,22 @@
               </p>
 
             </section>
+
+            <div class="presentation-visual" aria-label="Documentary versus single comparison">
+              <div class="visual-arrow-row">
+                <article class="visual-card">
+                  <span>The Documentary Asked</span>
+                  <strong>Who is Coco becoming as an artist?</strong>
+                </article>
+
+                <div class="visual-arrow" aria-hidden="true">≠</div>
+
+                <article class="visual-card">
+                  <span>The Single Said</span>
+                  <strong>Feel good. Be confident. Have fun.</strong>
+                </article>
+              </div>
+            </div>
 
             <figure class="meeting-photo-break wrong-conversation-image">
               <img
@@ -958,15 +1225,15 @@
                 And because the payment was based on views, of course people
                 were going to keep spamming clips in hopes one would pick up.
                 It did not really push the convo anywhere, Everyone was still
-                stuck on video one. even though all the videos were out. so they got 
+                stuck on video one. even though all the videos were out. So they got 
                 paid just to spam with no results.
               </p>
 
               <p>
-                Oops, let me mention the week Two campaign files.
+                Oops, let me mention the Week Two campaign files.
                 I recognized the downloader filename because it was the same
-                one I used. I found the clip on IG posted it on twitter, but
-                they recruited that clip in the paid campaign not even from the actual
+                one I used. I found the clip on IG and posted it on Twitter, but
+                they recruited that clip in the paid campaign, not even from the actual
                 IG person that was there at the Don Julio performance..
               </p>
 
@@ -1037,11 +1304,11 @@
               <p>
                 They drag <strong>Coco Jones</strong>, even if paid campaigns
                 are a normal strategy labels use, even if you are not the one
-                planning these rollouts..
+                planning these rollouts...
               </p>
 
               <p>
-                I have no problem with paid campaigns.. 
+                I have no problem with paid campaigns... 
                 but because this specific one kept spamming, added AI images
                 that were not needed, and created a chance for your name to get
                 dragged if the wrong person found it first... I hate it.
@@ -1049,7 +1316,29 @@
 
             </section>
 
-            <a class="office-folder-link" href="campaign-evidence.html">
+            <div class="presentation-visual" aria-label="Paid campaign distribution visual">
+              <div class="visual-grid">
+                <article class="visual-card">
+                  <span>Input</span>
+                  <strong>Unposted footage</strong>
+                  <p>Clips were given to outside accounts.</p>
+                </article>
+
+                <article class="visual-card">
+                  <span>Instruction</span>
+                  <strong>Artist at a crossroads</strong>
+                  <p>The same heavy framing was repeated across posts.</p>
+                </article>
+
+                <article class="visual-card">
+                  <span>Risk</span>
+                  <strong>Your name takes the hit</strong>
+                  <p>The internet does not separate the artist from the campaign.</p>
+                </article>
+              </div>
+            </div>
+
+            <a class="office-folder-link evidence-link" href="campaign-evidence.html">
               <span class="office-folder-icon" aria-hidden="true"></span>
               <span>
                 <strong>Open Paid Campaign Evidence</strong>
@@ -1143,6 +1432,8 @@
               <p>
                 I still think you can turn this around.
                 The stuff you've been posting after the song came out is the vibe this needed.
+              </p>
+
               <p>
                 That's the world I wish we would've gotten from the beginning.
                 Because that feels like <em>Body So Tea</em>.
@@ -1170,6 +1461,28 @@
               </p>
 
             </section>
+
+            <div class="presentation-visual" aria-label="Body So Tea rollout moodboard">
+              <div class="visual-grid">
+                <article class="visual-card">
+                  <span>GRWM</span>
+                  <strong>Use the sound early</strong>
+                  <p>Let people hear it before the official announcement.</p>
+                </article>
+
+                <article class="visual-card">
+                  <span>BTS</span>
+                  <strong>Show the process</strong>
+                  <p>Recording, photoshoots, videos, and the fun around it.</p>
+                </article>
+
+                <article class="visual-card">
+                  <span>Energy</span>
+                  <strong>Let the song feel lived in</strong>
+                  <p>Dances, hair, summer moments, and personality.</p>
+                </article>
+              </div>
+            </div>
 
           </div>
 
