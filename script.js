@@ -15,13 +15,12 @@ const STORAGE = {
   guideSeen: "sourceOffice_rollout_guide_seen"
 };
 
-const TOTAL_PAGES = 8;
+const TOTAL_PAGES = 7;
 
 const PAGE_TITLES = [
   "Before We Start",
-  "The Timeline",
-  "Where I Felt It",
-  "Different Platforms",
+  "What You Didn’t Tell Us",
+  "The Other Side of It",
   "Fan Fatigue",
   "The Wrong Conversation",
   "The Paid Campaign",
@@ -35,8 +34,7 @@ const AUDIO_SOURCES = {
   4: "",
   5: "",
   6: "",
-  7: "",
-  8: ""
+  7: ""
 };
 
 /* =========================================================
